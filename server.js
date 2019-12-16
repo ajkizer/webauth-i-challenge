@@ -10,6 +10,9 @@ const server = express();
 
 const KnexSessionStore = connectSessionKnex(session);
 
+const AuthRouter = require("./auth/auth-router");
+const UserRouter = require("./users/users-router");
+
 const sessionConfig = {
   name: "trackpad life",
   secret: "thug life",
@@ -19,7 +22,7 @@ const sessionConfig = {
     httpOnly: true
   },
   resave: false,
-  saveUnititialzed: false,
+  saveUninitialized: false,
   store: new KnexSessionStore({
     knex: db,
     tablename: "sessions",
@@ -33,5 +36,7 @@ server.use(helmet());
 server.use(express.json());
 server.use(cors());
 server.use(session(sessionConfig));
+server.use("/api/auth", AuthRouter);
+server.use("/api/users", UserRouter);
 
 module.exports = server;
